@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# A python3 wrapper which runs the detected interpreter with argv[0] set to this script
+
+# Detect a python3 interpreter from standard path
+python="$(command -p -v python3)"
+
+# Exec the detected python3 interpreter with argv[0] set to this script
+exec -a "$0" "$python" "$@"
