@@ -2,8 +2,10 @@
 
 # A python3 wrapper which runs the detected interpreter with argv[0] set to this script
 
-# Detect a python3 interpreter from standard path
-python="$(command -p -v python3)"
+# If not specified, detect a python3 interpreter from standard path
+if [[ -z "$PYTHON_ENV_INTERPRETER" ]]; then
+    PYTHON_ENV_INTERPRETER="$(command -p -v python3)"
+fi
 
-# Exec the detected python3 interpreter with argv[0] set to this script
-exec -a "$0" "$python" "$@"
+# Exec the python3 interpreter with argv[0] set to this script
+exec -a "$0" "$PYTHON_ENV_INTERPRETER" "$@"
