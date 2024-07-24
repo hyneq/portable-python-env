@@ -1,0 +1,15 @@
+#!/bin/env python3
+"""
+A custom pip entry point which sets sys.executable to '/bin/env python3',
+ensuring the installed scripts are portable at the expense of activating the environment being necessary.
+"""
+
+import re
+import sys
+from pip._internal.cli.main import main
+
+if __name__ == '__main__':
+    sys.executable = '/bin/env python3'
+
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())

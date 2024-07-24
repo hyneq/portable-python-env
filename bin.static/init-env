@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Initializes the environment
+
+# Activate
+source "$(dirname "$0")/activate"
+
+# Install pip into the environment
+ensurepip --upgrade

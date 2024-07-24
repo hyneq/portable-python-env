@@ -1,0 +1,21 @@
+#!/bin/env python3
+"""
+A custom ensurepip entry point which removes pip3* scripts from bin as they should not be used
+"""
+
+import os
+import sys
+import glob
+
+import ensurepip
+
+if __name__ == "__main__":
+    ret = ensurepip._main()
+
+    if ret == 0:
+        for path in glob.glob(
+            os.path.join(os.path.dirname(__file__), os.path.pardir, 'bin', 'pip3*')
+        ):
+            os.remove(path)
+
+    sys.exit(ret)
