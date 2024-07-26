@@ -2,10 +2,38 @@
 
 # A python3 wrapper which runs the detected interpreter with argv[0] set to this script
 
-# If not specified, detect a python3 interpreter from standard path
-if [[ -z "$PYTHON_ENV_INTERPRETER" ]]; then
-    PYTHON_ENV_INTERPRETER="$(command -p -v python3)"
+workdir="$(realpath "$(dirname "$0")/..")"
+
+# Define a helper function for finding commands in locations other than the location of this script
+get_command() {
+    local PATH="$PATH:"
+    PATH="${PATH//"$workdir/bin.static":/}"
+
+    command -v "$1"
+}
+
+# Determine the Python interpreter
+if [[ -z "$PYTHON_INTERPRETER" ]]; then
+    if [[ -s "$workdir/python_interpreter" ]]; then
+        PYTHON_INTERPRETER="$(cat "$workdir/python_interpreter")"
+    else
+        if [[ -z "$PYTHON_VERSION" ]]; then
+            if [[ -s "$workdir/python_version" ]]; then
+                PYTHON_VERSION="$(cat "$workdir/python_version")"
+            else
+                PYTHON_VERSION=3
+            fi
+        fi
+        PYTHON_INTERPRETER="python$PYTHON_VERSION"
+    fi
+fi
+
+# Determine the full path to the command
+python="$(get_command "$PYTHON_INTERPRETER")"
+if [[ $? -ne 0 ]]; then
+    echo "$0: $PYTHON_INTERPRETER: Python interpreter not found" >&2
+    exit 1
 fi
 
 # Exec the python3 interpreter with argv[0] set to this script
-exec -a "$0" "$PYTHON_ENV_INTERPRETER" "$@"
+exec -a "$0" "$python" "$@"

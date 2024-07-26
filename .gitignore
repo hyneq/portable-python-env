@@ -1,2 +1,4 @@
 bin/
 lib/python3*
+python_interpreter
+python_version
